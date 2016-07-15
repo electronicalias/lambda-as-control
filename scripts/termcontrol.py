@@ -34,13 +34,13 @@ def lambda_handler(event, context):
                     if val['Key'] == 'Scaling'][0]
                 action[value].append(instance['InstanceId'])
             except:
-                action['other'].append(instance['InstanceId'])
+                action['Other'].append(instance['InstanceId'])
 
         print "Instances missing tags: %s" % (
             action['Other'])
         print "Instances being Protected: %s" % (
             action['False'])
-        print "Instances being with Protection Off: %s" % (
+        print "Instances with Protection Off: %s" % (
             action['True'])
 
         for enableprotection in action['False']:
