@@ -1,7 +1,8 @@
 import boto3
 import logging
+import collections
 
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
@@ -14,6 +15,7 @@ def lambda_handler(event, context):
         rname = event['Region']
         action = collections.defaultdict(list)
         ec2 = boto3.client('ec2', rname)
+        ec2res = boto3.resource('ec2', rname)
         reservations = ec2.describe_instances(
             Filters=[
                 {'Name': 'tag-key', 'Values': ['Scaling']},
@@ -34,20 +36,27 @@ def lambda_handler(event, context):
             except:
                 action['other'].append(instance['InstanceId'])
 
-            for enableprotection in action['False']:
-                instance = ec2.Instance(enableprotection)
-                    response = instance.modify_attribute(
-                        DisableApiTermination={
-                            'Value': True
-                        },
-                    )
-                    print "Termination Protection has been Enabled for: %s" % (i['InstanceId'])
+        print "Instances missing tags: %s" % (
+            action['Other'])
+        print "Instances being Protected: %s" % (
+            action['False'])
+        print "Instances being with Protection Off: %s" % (
+            action['True'])
 
-            for disableprotection in action['True']:
-                instance = ec2.Instance(disableprotection)
-                    response = instance.modify_attribute(
-                        DisableApiTermination={
-                            'Value': False
-                        },
-                    )
-                    print "Termination Protection has been Disabled for: %s" % (i['InstanceId'])
+        for enableprotection in action['False']:
+            instance = ec2res.Instance(enableprotection)
+            response = instance.modify_attribute(
+                DisableApiTermination={
+                    'Value': True
+                },
+            )
+            print "Termination Protection has been Enabled for: %s" % (i['InstanceId'])
+
+        for disableprotection in action['True']:
+            instance = ec2res.Instance(disableprotection)
+            response = instance.modify_attribute(
+                DisableApiTermination={
+                    'Value': False
+                },
+            )
+            print "Termination Protection has been Disabled for: %s" % (i['InstanceId'])

@@ -2,7 +2,7 @@ import boto3
 import logging
 import collections
 
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
@@ -20,13 +20,19 @@ def lambda_handler(event, context):
 
         for group in asgroups:
             try:
-                suspend = [
+                state = [
                     str(val.get('Value')) for val in group['Tags']
                     if val['Key'] == 'Scaling'][0]
-                action[suspend].append(group['AutoScalingGroupName'])
+                action[state].append(group['AutoScalingGroupName'])
             except:
-                action['other'].append(group['AutoScalingGroupName'])
-        return action['False']
+                action['Other'].append(group['AutoScalingGroupName'])
+        
+        print "Groups missing tags: %s" % (
+            action['Other'])
+        print "Groups being disalbed: %s" % (
+            action['False'])
+        print "Groups being enabled: %s" % (
+            action['True'])
 
         for disabledasg in action['False']:
             asc.suspend_processes(
