@@ -91,7 +91,16 @@
                                 "ec2:ResetSnapshotAttribute"
               						  ],
               						  "Resource": "*"
-            				    }]
+            				    },
+                        {
+                            "Effect": "Allow",
+                            "Action": [         
+                                "autoscaling:DescribeAutoScalingGroups"
+                                "autoscaling:ResumeProcesses"
+                                "autoscaling:SuspendProcesses"
+                            ],
+                            "Resource": "*"
+                        }]
       				      }
     			      }]
   			    }
