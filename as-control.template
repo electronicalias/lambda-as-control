@@ -95,8 +95,8 @@
                         {
                             "Effect": "Allow",
                             "Action": [         
-                                "autoscaling:DescribeAutoScalingGroups"
-                                "autoscaling:ResumeProcesses"
+                                "autoscaling:DescribeAutoScalingGroups",
+                                "autoscaling:ResumeProcesses",
                                 "autoscaling:SuspendProcesses"
                             ],
                             "Resource": "*"
