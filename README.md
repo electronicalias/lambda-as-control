@@ -1,17 +1,16 @@
 # lambda-ec2-snap
-This CloudFormation Template creates Lambda functions that will Suspend AutoScaling and/or enable Termination Protection. I have found this to be useful in the phased approach of a lift and shift, where instances are not 'Cloud Ready' and therefore cannot make use of AS. 
-
-Instead of instantiating instances without being wrapped aruond AS, we still use AS/Luanch Configs, but turn off the feature until the instances are ready to scale.
+This tool pertains to a solution in Amazon Web Services (AWS) that will disable AutoScaling (AS) and enable Termination Protection (TS). I have found this to be useful in a phased approach to lift and shift migrations, where instances are not 'Cloud Ready' and therefore cannot make use of AS. But, instead of instantiating instances without being wrapped up by AS, we still use AS/Luanch Configurations (LC), but turn off the features until the instances are ready to scale.
 
 # Dependencies
 
 1. Auto-Scaling Groups must have a "Scaling" tag, with a value of True or False
-2. The scripts in the script directory need to be zipped into a zip file, the name for which is used in the parameter S3Key
+2. The scripts in the script directory need to be zipped into a zipfile, the name for which is used in the parameter S3Key
+3. The zipfile needs to be hosted in an S3 Bucket
 
 # Logic
 
-1. After uploading the FILE.zip file to S3 to the bucket you choose, with the key you choose, run the cloudformation template
-2. Choose True/False to enable/disable the feature
+1. After uploading the FILE.zip file to S3 to the bucket you choose, with the key you choose, run the CloudFormation (CFN) template
+2. Choose True/False to enable/disable the feature when the CFN template is run
 3. Set the "Scaling" tag appropriately:
 
   True: Resume Auto Scaling Actions (all) and Turn OFF Termination Protection on the instances provisioned by that ASG
